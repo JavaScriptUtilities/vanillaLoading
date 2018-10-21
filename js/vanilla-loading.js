@@ -1,6 +1,6 @@
 /*
  * Plugin Name: Vanilla-JS Loading
- * Version: 0.1.0
+ * Version: 0.2.0
  * Plugin URL: https://github.com/JavaScriptUtilities/vanillaLoading
  * JavaScriptUtilities Vanilla-JS may be freely distributed under the MIT license.
  */
@@ -45,6 +45,28 @@ var vanillaLoading = function(assets, settings) {
     };
 
     self.downloadAsset = function(url) {
+        if (url.match(/\.(jpg|jpeg|png|gif|bmp)$/i)) {
+            return self.downloadAssetImage(url);
+        }
+        else {
+            return self.downloadAssetDefault(url);
+        }
+    };
+
+    /* Download via AJAX */
+    self.downloadAssetDefault = function(url) {
+        var xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState == 4 && (xhr.status == 200 || xhr.status == 0)) {
+                self.callBackDownloadedAsset();
+            }
+        };
+        xhr.open("GET", url, true);
+        xhr.send(null);
+    };
+
+    /* Download via image creation */
+    self.downloadAssetImage = function(url) {
         var _img = new Image();
         _img.onload = self.callBackDownloadedAsset;
         _img.src = url;
