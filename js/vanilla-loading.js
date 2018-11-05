@@ -1,6 +1,6 @@
 /*
  * Plugin Name: Vanilla-JS Loading
- * Version: 0.3.0
+ * Version: 0.4.0
  * Plugin URL: https://github.com/JavaScriptUtilities/vanillaLoading
  * JavaScriptUtilities Vanilla-JS may be freely distributed under the MIT license.
  */
@@ -80,8 +80,9 @@ var vanillaLoading = function(assets, settings) {
         _img.src = url;
     };
 
-    /* ASSETS */
+    /* Prepare asset loading  */
     (function() {
+        var _winWidth = window.innerWidth;
         /* Filter valid assets */
         if (typeof assets !== 'object') {
             console.log('Assets is not a valid object');
@@ -92,6 +93,17 @@ var vanillaLoading = function(assets, settings) {
             if (!assets[i] || typeof assets[i] !== 'object' || !assets[i].url) {
                 continue;
             }
+            /* Check screen width requirements */
+            if (!assets[i].minScreenWidth) {
+                assets[i].minScreenWidth = 0;
+            }
+            if (!assets[i].maxScreenWidth) {
+                assets[i].maxScreenWidth = 99999;
+            }
+            if (_winWidth < assets[i].minScreenWidth || _winWidth > assets[i].maxScreenWidth) {
+                continue;
+            }
+            /* Add this asset to the list */
             _assets.push(assets[i]);
         }
         /* Kill if no asset is valid */
