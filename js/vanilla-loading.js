@@ -1,6 +1,6 @@
 /*
  * Plugin Name: Vanilla-JS Loading
- * Version: 0.4.0
+ * Version: 0.5.0
  * Plugin URL: https://github.com/JavaScriptUtilities/vanillaLoading
  * JavaScriptUtilities Vanilla-JS may be freely distributed under the MIT license.
  */
@@ -50,33 +50,62 @@ var vanillaLoading = function(assets, settings) {
         }
     };
 
-    self.downloadAsset = function(url, callback, arg1) {
+    self.downloadAsset = function(url, timeout, callback, arg1) {
         if (url.match(/\.(jpg|jpeg|png|gif|bmp)$/i)) {
-            return self.downloadAssetImage(url, callback, arg1);
+            return self.downloadAssetImage(url, timeout, callback, arg1);
         }
         else {
-            return self.downloadAssetDefault(url, callback, arg1);
+            return self.downloadAssetDefault(url, timeout, callback, arg1);
         }
     };
 
     /* Download via AJAX */
-    self.downloadAssetDefault = function(url, callback, arg1) {
+    self.downloadAssetDefault = function(url, timeout, callback, arg1) {
+        var _isLoaded = false;
         var xhr = new XMLHttpRequest();
         xhr.onreadystatechange = function() {
             if (xhr.readyState == 4 && (xhr.status == 200 || xhr.status == 0)) {
+                if (_isLoaded) {
+                    return;
+                }
+                _isLoaded = true;
                 self.callBackDownloadedAsset(xhr.response, url, callback, arg1);
             }
         };
+
+        if (timeout) {
+            setTimeout(function() {
+                if (_isLoaded) {
+                    return;
+                }
+                _isLoaded = true;
+                self.callBackDownloadedAsset(false, url, callback, arg1);
+            }, timeout);
+        }
         xhr.open("GET", url, true);
         xhr.send(null);
     };
 
     /* Download via image creation */
-    self.downloadAssetImage = function(url, callback, arg1) {
+    self.downloadAssetImage = function(url, timeout, callback, arg1) {
+        var _isLoaded = false;
         var _img = new Image();
         _img.onload = function() {
+            if (_isLoaded) {
+                return;
+            }
+            _isLoaded = true;
             self.callBackDownloadedAsset(false, url, callback, arg1);
         };
+        if (timeout) {
+            setTimeout(function() {
+                if (_isLoaded) {
+                    return;
+                }
+                _isLoaded = true;
+                self.callBackDownloadedAsset(false, url, callback, arg1);
+            }, timeout);
+        }
         _img.src = url;
     };
 
@@ -117,13 +146,15 @@ var vanillaLoading = function(assets, settings) {
         _assetsToDownload = _assetsCount;
         _assetPercent = 100 / _assetsCount;
         var _tmpCallback,
+            _timeout,
             _tmpArg1;
 
         /* Trigger download */
         for (var y = 0, len = _assets.length; y < len; y++) {
             _tmpCallback = _assets[y].callback || [];
+            _timeout = _assets[y].timeout || 0;
             _tmpArg1 = _assets[y].arg1 || [];
-            self.downloadAsset(_assets[y].url, _tmpCallback, _tmpArg1);
+            self.downloadAsset(_assets[y].url, _timeout, _tmpCallback, _tmpArg1);
         }
     }());
 
