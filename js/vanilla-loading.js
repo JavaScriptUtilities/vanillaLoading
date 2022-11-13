@@ -1,6 +1,6 @@
 /*
  * Plugin Name: Vanilla-JS Loading
- * Version: 0.5.0
+ * Version: 0.6.0
  * Plugin URL: https://github.com/JavaScriptUtilities/vanillaLoading
  * JavaScriptUtilities Vanilla-JS may be freely distributed under the MIT license.
  */

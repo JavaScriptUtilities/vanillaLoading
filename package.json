@@ -1,0 +1,22 @@
+{
+  "name": "vanillaLoading",
+  "version": "0.6.0",
+  "description": "Ensure a list of assets is downloaded before triggering an action.",
+  "main": "js/vanilla-loading.js",
+  "scripts": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JavaScriptUtilities/vanillaLoading.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/JavaScriptUtilities/vanillaLoading/issues"
+  },
+  "homepage": "https://github.com/JavaScriptUtilities/vanillaLoading#readme",
+  "devDependencies": {
+    "del": "^6.0.0",
+    "gulp": "^4.0.2",
+    "gulp-minify": "^3.1.0"
+  }
+}
